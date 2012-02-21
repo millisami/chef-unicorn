@@ -32,7 +32,7 @@ ENV['BUNDLE_GEMFILE'] = "#{working_directory}/Gemfile"
 end
 <%- end %>
 
-<%- @cow %>
+<%- if @cow %>
 # Enable Copy on Write Garbage Collector - http://www.rubyenterpriseedition.com/faq.html#adapt_apps_for_cow
 if GC.respond_to?(:copy_on_write_friendly=)
   GC.copy_on_write_friendly = true
