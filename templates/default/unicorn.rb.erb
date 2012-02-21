@@ -16,7 +16,6 @@ listen <%= port %>, <%= options %>
 <%- end %>
 
 <%- if @working_directory %>
-current_path = '<%= @working_directory %>'
 working_directory '<%= @working_directory %>'
 <%- end %>
 
@@ -99,8 +98,8 @@ before_fork do |server, worker|
   sleep 1
   <%= @before_fork %>
 end
-
 <%- end %>
+
 <%- if @after_fork %>
 # if Active Record is loaded re-establish the connection on each worker.
 after_fork do |server, worker|
@@ -109,13 +108,11 @@ after_fork do |server, worker|
   end
   <%= @after_fork %>
 end
-
 <%- end %>
 
 <%- if @pid %>
 # sets the +path+ for the PID file of the unicorn master process
 pid '<%= @pid %>'
-
 <%- end %>
 
 <%- if @logger %>
@@ -140,5 +137,4 @@ stderr_path '<%= @stderr_path %>'
 # Some applications/libraries may also triggering warnings that go to
 # stdout, and they will end up here.
 stdout_path '<%= @stdout_path %>'
-
 <%- end %>
