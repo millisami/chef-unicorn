@@ -1,0 +1,33 @@
+Bluepill.application("<%= @name %>") do |app|
+  app.process("<%= @process_name %>") do |process|
+    process.pid_file = "<%= @pid %>"
+    process.working_dir = "<%= @working_directory %>"
+
+    process.start_command = "<%= @start_command %>"
+    process.stop_command = "<%= @stop_command %>"
+    process.restart_command = "<%= @restart_command %>"
+
+    process.uid = "<%= @owner %>"
+    process.gid = "<%= @group %>"
+
+    process.start_grace_time = <%= @start_grace_time %>.seconds
+    process.stop_grace_time = <%= @stop_grace_time %>.seconds
+    process.restart_grace_time = <%= @restart_grace_time %>.seconds
+
+    process.monitor_children do |child_process|
+      child_process.stop_command = "kill -6 {{PID}}"
+
+      child_process.checks( :mem_usage,
+                            :every => 30.seconds,
+                            :below => <%= @mem_usage_mb %>.megabytes,
+                            :times => [3,4],
+                            :fires => :stop )
+
+      child_process.checks( :cpu_usage,
+                            :every => 30.seconds,
+                            :below => <%= @cpu_usage_percent %>,
+                            :times => [3,4],
+                            :fires => :stop )
+    end
+  end
+end

@@ -20,10 +20,10 @@
 # limitations under the License.
 #
 
-define :unicorn_config, :listen => nil, :working_directory => nil, :worker_timeout => 60, :preload_app => false, :worker_processes => 4, :before_fork => nil, :after_fork => nil, :pid => nil, :stderr_path => nil, :stdout_path => nil, :notifies => nil, :owner => nil, :group => nil, :gem_home => nil, :cow => nil, :logger => nil, :mode => nil do
+define :unicorn_config, :listen => nil, :working_directory => nil, :worker_timeout => 60, :preload_app => false, :worker_processes => 4, :before_fork => nil, :after_fork => nil, :pid => nil, :stderr_path => nil, :stdout_path => nil, :notifies => nil, :owner => nil, :group => nil, :gem_home => nil, :cow => nil, :logger => nil, :bluepill => nil, :mode => nil, :start_command => nil, :stop_command => nil, :restart_command => nil do
   config_dir = File.dirname(params[:name])
 
-  directory config_dir do
+  directory "/etc/unicorn/#{config_dir}" do
     recursive true
     action :create
   end
@@ -37,7 +37,7 @@ define :unicorn_config, :listen => nil, :working_directory => nil, :worker_timeo
     tvars[:listen][port] = oarray.join(", ")
   end
 
-  template params[:name] do
+  template "/etc/unicorn/#{params[:name]}.rb" do
     source "unicorn.rb.erb"
     cookbook "unicorn"
     mode "0644"
@@ -48,4 +48,19 @@ define :unicorn_config, :listen => nil, :working_directory => nil, :worker_timeo
     notifies *params[:notifies] if params[:notifies]
   end
 
+  case params[:bluepill]
+    when /enabled/
+    template "/etc/unicorn/#{params[:name]}.pill" do
+      source "unicorn.pill.erb"
+      cookbook "unicorn"
+      mode "0644"
+      owner params[:owner] if params[:owner]
+      group params[:group] if params[:group]
+      mode params[:mode]   if params[:mode]
+      variables params
+      notifies *params[:notifies] if params[:notifies]
+    end
+  else
+  log "bluepill is not configured"
+  end
 end
