@@ -11,15 +11,16 @@
 #   listen "127.0.0.1:3000"  # listen to port 3000 on the loopback interface
 #   listen "/tmp/.unicorn.sock" # listen on the given Unix domain socket
 #   listen "[::1]:3000" # listen to port 3000 on the IPv6 loopback interface
-<%- @listen.each do |port, options| %>
+
+<% @listen.each do |port, options| %>
 listen <%= port %>, <%= options %>
-<%- end %>
+<% end %>
 
 <%- if @working_directory %>
 working_directory '<%= @working_directory %>'
-<%- end %>
+<% end %>
 
-<%- if @gem_home %>
+<% if @gem_home %>
 gem_home = '<%= @gem_home %>'
 
 before_exec do |server|
@@ -30,14 +31,14 @@ ENV["PATH"] = paths.uniq.join(File::PATH_SEPARATOR)
 ENV['GEM_HOME'] = ENV['GEM_PATH'] = gem_home
 ENV['BUNDLE_GEMFILE'] = "#{working_directory}/Gemfile"
 end
-<%- end %>
+<% end %>
 
-<%- if @cow %>
+<% if @cow %>
 # Enable Copy on Write Garbage Collector - http://www.rubyenterpriseedition.com/faq.html#adapt_apps_for_cow
 if GC.respond_to?(:copy_on_write_friendly=)
   GC.copy_on_write_friendly = true
 end
-<%- end %>
+<% end %>
 
 # sets the timeout of worker processes to +seconds+.  Workers
 # handling the request/app.call/response cycle taking longer than
@@ -68,7 +69,7 @@ preload_app <%= @preload_app %>
 # for more information.
 worker_processes <%= @worker_processes %>
 
-<%- if @before_fork %>
+<% if @before_fork %>
 # What to do before we fork a worker
 before_fork do |server, worker|
   # If Active Record is loaded: disconnect/close connections on the master process.
@@ -95,12 +96,11 @@ before_fork do |server, worker|
       # someone else did our job for us
     end
   end
-  sleep 1
   <%= @before_fork %>
 end
-<%- end %>
+<% end %>
 
-<%- if @after_fork %>
+<% if @after_fork %>
 # if Active Record is loaded re-establish the connection on each worker.
 after_fork do |server, worker|
   if defined?(ActiveRecord::Base)
@@ -108,33 +108,33 @@ after_fork do |server, worker|
   end
   <%= @after_fork %>
 end
-<%- end %>
+<% end %>
 
-<%- if @pid %>
+<% if @pid %>
 # sets the +path+ for the PID file of the unicorn master process
 pid '<%= @pid %>'
-<%- end %>
+<% end %>
 
-<%- if @logger %>
+<% if @logger %>
 # The default Logger will log its output to the path specified
 # by +stderr_path+.  If you're running Unicorn daemonized, then
 # you must specify a path to prevent error messages from going
 # to /dev/null.
 logger Logger.new("<%= @logger %>")
-<%- end %>
+<% end %>
 
-<%- if @stderr_path %>
+<% if @stderr_path %>
 # If you are daemonizing and using the default +logger+, it is important
 # to specify this as errors will otherwise be lost to /dev/null.
 # Some applications/libraries may also triggering warnings that go to
 # stderr, and they will end up here.
 stderr_path '<%= @stderr_path %>'
-<%- end %>
+<% end %>
 
-<%- if @stdout_path %>
+<% if @stdout_path %>
 # If you are daemonizing and using the default +logger+, it is important
 # to specify this as errors will otherwise be lost to /dev/null.
 # Some applications/libraries may also triggering warnings that go to
 # stdout, and they will end up here.
 stdout_path '<%= @stdout_path %>'
-<%- end %>
+<% end %>
