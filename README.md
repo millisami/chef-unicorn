@@ -17,34 +17,35 @@ Usage
 >``bundle install --path /data/example/bundled_gems``
  * You would then configure gem_home like this:
 
-``node.default[:unicorn][:gem_home] = '/data/example/bunled_gems'``
+node.default[:unicorn][:gem_home] = '/data/example/bunled_gems'
  
 * Your application recipe should look something like this:
 
-``include_recipe "unicorn"``  
-``node.default[:unicorn][:worker_timeout] = 180``  
-``node.default[:unicorn][:preload_app] = false``  
-``node.default[:unicorn][:worker_processes] = 4``  
-``node.default[:unicorn][:before_fork] = 'sleep 1' ``  
-``node.default[:unicorn][:port] = '8080'``  
-``node.default[:unicorn][:gem_home] = nil``  
-``node.default[:unicorn][:stderr_path] = 'log/stderr.log'``  
-``node.default[:unicorn][:stdout_path] = 'log/stdout.log'``  
-``node.default[:unicorn][:logger] = 'log/unicorn.log'``  
-``node.set[:unicorn][:options] = { :tcp_nodelay => true, :backlog => 4096 }``  
+```ruby
+include_recipe "unicorn"
+node.default[:unicorn][:worker_timeout] = 180  
+node.default[:unicorn][:preload_app] = false  
+node.default[:unicorn][:worker_processes] = 4 
+node.default[:unicorn][:before_fork] = 'sleep 1'  
+node.default[:unicorn][:port] = 8080
+node.default[:unicorn][:gem_home] = nil
+node.default[:unicorn][:stderr_path] = 'log/stderr.log'  
+node.default[:unicorn][:stdout_path] = 'log/stdout.log'  
+node.default[:unicorn][:logger] = 'log/unicorn.log'
+node.set[:unicorn][:options] = { :tcp_nodelay => true, :backlog => 4096 }
 
-``unicorn_config "/etc/unicorn/example.rb" do``  
-``listen({ node[:unicorn][:port] => node[:unicorn][:options] })``  
-``working_directory '/data/example/current'``  
-``worker_timeout node[:unicorn][:worker_timeout]``  
-``gem_home node[:unicorn][:gem_home]``  
-``preload_app node[:unicorn][:preload_app]``  
-``worker_processes node[:unicorn][:worker_processes]``  
-``before_fork node[:unicorn][:before_fork]``   
-``logger node[:unicorn][:logger]``  
-``stderr_path node[:unicorn][:stderr_path]``  
-``stdout_path node[:unicorn][:stdout_path]``  
-
+unicorn_config "/etc/unicorn/example.rb" do
+listen({ node[:unicorn][:port] => node[:unicorn][:options] })  
+working_directory '/data/example/current'
+worker_timeout node[:unicorn][:worker_timeout]  
+gem_home node[:unicorn][:gem_home]
+preload_app node[:unicorn][:preload_app]
+worker_processes node[:unicorn][:worker_processes]  
+before_fork node[:unicorn][:before_fork]   
+logger node[:unicorn][:logger]
+stderr_path node[:unicorn][:stderr_path]  
+stdout_path node[:unicorn][:stdout_path] 
+```
 
 
 Authors and Copyright
