@@ -18,7 +18,7 @@ Usage
  * You would then configure gem_home like this:
 
 ```ruby
-node.default[:unicorn][:gem_home] = '/data/example/bunled_gems'
+node.default[:unicorn][:gem_home] = '/data/example/bundled_gems'
 ```
 
 * Your application recipe should look something like this:
