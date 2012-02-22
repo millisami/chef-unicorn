@@ -54,7 +54,7 @@ end
 Authors and Copyright
 --------
 
-Author:: Scott M. Likens <scott@likens.us>
+Author:: Scott M. Likens <scott@likens.us>  
 Author:: Adam Jacob <adam@opscode.com>
 
 Copyright 2009-2010, Opscode, Inc.
