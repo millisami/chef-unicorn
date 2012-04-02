@@ -29,7 +29,7 @@ paths.unshift "#{gem_home}/bin"
 ENV["PATH"] = paths.uniq.join(File::PATH_SEPARATOR)
 
 ENV['GEM_HOME'] = ENV['GEM_PATH'] = gem_home
-ENV['BUNDLE_GEMFILE'] = "#{working_directory}/Gemfile"
+ENV['BUNDLE_GEMFILE'] = "<%= @working_directory %>/Gemfile"
 end
 <% end %>
 
